@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>The Wedding of Lugina &amp; Rani · 28.12.2026</title>
+    <meta name="description" content="Together with our families, we invite you to celebrate the wedding of Muhamad Lugina Nurhuda &amp; Rani Rantika on Monday, 28 December 2026." />
+    <meta name="theme-color" content="#050a18" />
+
+    <!-- Link preview (WhatsApp, Instagram, etc.). After deploying, change og:image to the full URL, e.g. https://your-site.netlify.app/og.jpg -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="The Wedding of Lugina &amp; Rani" />
+    <meta property="og:description" content="Monday, 28 December 2026 — you are invited ✨" />
+    <meta property="og:image" content="og.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&family=Pinyon+Script&display=swap" rel="stylesheet" />
+  </head>
+
+  <body class="is-locked">
+    <div class="sky" aria-hidden="true"></div>
+    <canvas id="scene" aria-hidden="true"></canvas>
+    <div class="shooting-stars" aria-hidden="true"><span></span><span></span><span></span></div>
+
+    <!-- ============ COVER / ENVELOPE ============ -->
+    <section class="cover" id="cover" aria-label="Invitation">
+      <div class="cover__inner">
+        <p class="eyebrow cover__fade">The Wedding of</p>
+        <h1 class="cover__names script cover__fade">
+          <span data-bind="groom-nick"></span> <span class="amp">&amp;</span> <span data-bind="bride-nick"></span>
+        </h1>
+
+        <div class="envelope-wrap">
+          <div class="envelope" id="envelope">
+            <div class="envelope__back"></div>
+            <div class="envelope__letter">
+              <p class="envelope__letter-eyebrow">Together with their families</p>
+              <p class="envelope__letter-names script"><span data-bind="groom-nick"></span> &amp; <span data-bind="bride-nick"></span></p>
+              <p class="envelope__letter-date" data-bind="date-dots"></p>
+            </div>
+            <svg class="envelope__front" viewBox="0 0 300 200" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="env-front" x1="0" y1="1" x2="1" y2="0">
+                  <stop offset="0" stop-color="#0a2a33" />
+                  <stop offset="1" stop-color="#13285a" />
+                </linearGradient>
+                <linearGradient id="env-flap" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#162e63" />
+                  <stop offset="1" stop-color="#0c2240" />
+                </linearGradient>
+              </defs>
+              <path d="M0,0 L150,104 L300,0 L300,200 L0,200 Z" fill="url(#env-front)" />
+              <path d="M0,200 L128,92 M300,200 L172,92" stroke="#d4af6a" stroke-opacity=".35" stroke-width=".8" fill="none" />
+              <path d="M0,0 L150,104 L300,0" stroke="#d4af6a" stroke-opacity=".55" stroke-width=".8" fill="none" />
+            </svg>
+            <svg class="envelope__flap" viewBox="0 0 300 200" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M0,0 L300,0 L150,118 Z" fill="url(#env-flap)" stroke="#d4af6a" stroke-opacity=".7" stroke-width=".8" />
+            </svg>
+            <div class="envelope__seal"><span data-bind="monogram"></span></div>
+          </div>
+        </div>
+
+        <p class="cover__dear cover__fade">Dear,</p>
+        <p class="cover__guest cover__fade" id="guest-name">Our Beloved Family &amp; Friends</p>
+        <p class="cover__note cover__fade">We apologise for any misspelling of your name or title.</p>
+        <button class="btn btn--gold cover__fade" id="open-invitation" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7l9 6 9-6M4 5h16a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V6a1 1 0 011-1z" /></svg>
+          Open Invitation
+        </button>
+      </div>
+    </section>
+
+    <main id="main">
+      <!-- ============ HERO ============ -->
+      <section class="hero" id="home">
+        <div class="hero__rings-fallback" aria-hidden="true">
+          <svg viewBox="0 0 200 140">
+            <defs>
+              <linearGradient id="gold-ring" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#f6e2a8" />
+                <stop offset=".5" stop-color="#c79a4a" />
+                <stop offset="1" stop-color="#f3d68e" />
+              </linearGradient>
+            </defs>
+            <circle cx="78" cy="78" r="44" fill="none" stroke="url(#gold-ring)" stroke-width="7" />
+            <circle cx="122" cy="78" r="44" fill="none" stroke="url(#gold-ring)" stroke-width="7" />
+            <path d="M122 22 l9 8 -9 12 -9 -12z" fill="#f7f3ea" stroke="#d4af6a" stroke-width="1" />
+          </svg>
+        </div>
+        <div class="hero__content">
+          <p class="eyebrow">We are getting married</p>
+          <h2 class="hero__names script">
+            <span data-bind="groom-nick"></span><span class="amp">&amp;</span><span data-bind="bride-nick"></span>
+          </h2>
+          <p class="hero__date" data-bind="date-dots"></p>
+        </div>
+        <a class="scroll-hint" href="#countdown" aria-label="Scroll down">
+          <span>Scroll</span><i></i>
+        </a>
+      </section>
+
+      <!-- ============ COUNTDOWN ============ -->
+      <section class="section countdown" id="countdown">
+        <p class="eyebrow reveal">Save the Date</p>
+        <h2 class="title reveal">Counting Down to Forever</h2>
+        <p class="lead reveal" data-bind="date-long"></p>
+        <div class="countdown__grid reveal" id="countdown-grid">
+          <div class="count"><span class="count__num" data-unit="days">00</span><span class="count__label">Days</span></div>
+          <div class="count"><span class="count__num" data-unit="hours">00</span><span class="count__label">Hours</span></div>
+          <div class="count"><span class="count__num" data-unit="minutes">00</span><span class="count__label">Minutes</span></div>
+          <div class="count"><span class="count__num" data-unit="seconds">00</span><span class="count__label">Seconds</span></div>
+        </div>
+        <p class="countdown__done" id="countdown-done" hidden></p>
+        <a class="btn btn--ghost reveal" id="save-date" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v3M17 3v3M4 9h16M5 5h14a1 1 0 011 1v13a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1z" /></svg>
+          Add to Calendar
+        </a>
+      </section>
+
+      <!-- ============ COUPLE ============ -->
+      <section class="section couple" id="couple">
+        <p class="salam reveal" data-bind="salam-open"></p>
+        <p class="lead reveal" data-bind="opening-text"></p>
+        <div class="ornament reveal" aria-hidden="true"><span></span></div>
+        <div class="couple__grid">
+          <article class="person reveal">
+            <div class="person__medallion"><span data-bind="groom-initial"></span></div>
+            <h3 class="person__nick script" data-bind="groom-nick"></h3>
+            <p class="person__name" data-bind="groom-full"></p>
+            <p class="person__parents" data-bind="groom-parents"></p>
+            <a class="person__ig" data-ig="groom" target="_blank" rel="noopener" hidden></a>
+          </article>
+          <div class="couple__amp script reveal" aria-hidden="true">&amp;</div>
+          <article class="person reveal">
+            <div class="person__medallion"><span data-bind="bride-initial"></span></div>
+            <h3 class="person__nick script" data-bind="bride-nick"></h3>
+            <p class="person__name" data-bind="bride-full"></p>
+            <p class="person__parents" data-bind="bride-parents"></p>
+            <a class="person__ig" data-ig="bride" target="_blank" rel="noopener" hidden></a>
+          </article>
+        </div>
+        <figure class="verse panel reveal">
+          <blockquote data-bind="verse-text"></blockquote>
+          <figcaption data-bind="verse-source"></figcaption>
+        </figure>
+      </section>
+
+      <!-- ============ LOVE STORY (3D corridor) ============ -->
+      <section class="story" id="story">
+        <header class="section story__header">
+          <p class="eyebrow reveal">Our Journey</p>
+          <h2 class="title reveal">Our Love Story</h2>
+          <p class="lead reveal story__hint">Keep scrolling and travel through the stars with us.</p>
+        </header>
+        <div class="story__track" id="story-track">
+          <div class="story__stage">
+            <div class="story__dots" id="story-dots" aria-hidden="true"></div>
+            <div class="story__chapters" id="story-chapters"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ EVENTS ============ -->
+      <section class="section events" id="events">
+        <p class="eyebrow reveal">The Celebration</p>
+        <h2 class="title reveal">Wedding Events</h2>
+        <p class="lead reveal" data-bind="date-long"></p>
+        <div class="events__grid" id="events-grid"></div>
+      </section>
+
+      <!-- ============ GALLERY ============ -->
+      <section class="section gallery" id="gallery">
+        <p class="eyebrow reveal">Moments</p>
+        <h2 class="title reveal">Our Gallery</h2>
+        <div class="gallery__grid" id="gallery-grid"></div>
+      </section>
+
+      <!-- ============ RSVP & WISHES ============ -->
+      <section class="section rsvp" id="rsvp">
+        <p class="eyebrow reveal">Kindly Respond</p>
+        <h2 class="title reveal">RSVP &amp; Wishes</h2>
+        <p class="lead reveal">Let us know if you can make it, and leave a prayer or a few words for us.</p>
+
+        <form class="rsvp__form panel reveal" id="rsvp-form" novalidate>
+          <label class="field">
+            <span>Your name</span>
+            <input name="name" type="text" maxlength="60" autocomplete="name" required />
+          </label>
+          <fieldset class="field field--choice">
+            <legend>Will you attend?</legend>
+            <label class="choice"><input type="radio" name="attendance" value="Attending" required /><span>Joyfully attending</span></label>
+            <label class="choice"><input type="radio" name="attendance" value="Not attending" /><span>Sadly can’t make it</span></label>
+          </fieldset>
+          <label class="field" id="guests-field">
+            <span>Number of guests</span>
+            <select name="guests"></select>
+          </label>
+          <label class="field">
+            <span>Your wishes</span>
+            <textarea name="message" rows="4" maxlength="500" placeholder="Write your wishes and prayers…"></textarea>
+          </label>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <button class="btn btn--gold" type="submit">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l16-8-6 16-2.5-6.5L4 12z" /></svg>
+            Send RSVP
+          </button>
+          <p class="rsvp__demo" id="rsvp-demo" hidden>Demo mode: replies are saved in this browser only until the Google Sheet is connected.</p>
+        </form>
+
+        <div class="wishes reveal">
+          <h3 class="wishes__title"><span id="wishes-count">0</span> Wishes</h3>
+          <ul class="wishes__list" id="wishes-list"></ul>
+          <button class="btn btn--ghost btn--small" id="wishes-more" type="button" hidden>Show more</button>
+        </div>
+      </section>
+
+      <!-- ============ GIFT ============ -->
+      <section class="section gift" id="gift">
+        <p class="eyebrow reveal">With Love</p>
+        <h2 class="title reveal">Wedding Gift</h2>
+        <p class="lead reveal">Your presence and prayers are the greatest gift of all. If you would also like to send a token of love, you can do so here.</p>
+        <div class="gift__grid" id="gift-grid"></div>
+      </section>
+
+      <!-- ============ CLOSING ============ -->
+      <section class="section closing" id="closing">
+        <figure class="closing__photo reveal"><img id="closing-photo" alt="Lugina and Rani" loading="lazy" decoding="async" /></figure>
+        <h2 class="title reveal">Thank You</h2>
+        <p class="lead reveal" data-bind="closing-text"></p>
+        <p class="salam reveal" data-bind="salam-close"></p>
+        <p class="closing__names script reveal">
+          <span data-bind="groom-nick"></span> <span class="amp">&amp;</span> <span data-bind="bride-nick"></span>
+        </p>
+        <p class="closing__date reveal" data-bind="date-dots"></p>
+      </section>
+
+      <footer class="footer">Made with love · Lugina &amp; Rani · 2026</footer>
+    </main>
+
+    <!-- ============ FLOATING UI ============ -->
+    <nav class="dock" id="dock" aria-label="Sections">
+      <a href="#home" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z" /></svg></a>
+      <a href="#couple" aria-label="Couple"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.6-7 10-7 10z" /></svg></a>
+      <a href="#events" aria-label="Events"><svg viewBox="0 0 24 24"><path d="M7 3v3M17 3v3M4 9h16M5 5h14a1 1 0 011 1v13a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1z" /></svg></a>
+      <a href="#gallery" aria-label="Gallery"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM4 16l5-5 4 4 3-3 4 4" /><circle cx="15.5" cy="9" r="1.5" /></svg></a>
+      <a href="#rsvp" aria-label="RSVP"><svg viewBox="0 0 24 24"><path d="M3 7l9 6 9-6M4 5h16a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V6a1 1 0 011-1z" /></svg></a>
+    </nav>
+
+    <button class="music" id="music-toggle" type="button" aria-label="Play or pause music" hidden>
+      <svg class="music__on" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l11-2v12M9 18a3 3 0 11-6 0 3 3 0 016 0zM20 16a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+      <svg class="music__off" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l11-2v12M9 18a3 3 0 11-6 0 3 3 0 016 0zM20 16a3 3 0 11-6 0 3 3 0 016 0zM3 3l18 18" /></svg>
+    </button>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
+      <button class="lightbox__close" type="button" aria-label="Close">&times;</button>
+      <button class="lightbox__nav lightbox__nav--prev" type="button" aria-label="Previous photo">&#8249;</button>
+      <img class="lightbox__img" alt="" />
+      <button class="lightbox__nav lightbox__nav--next" type="button" aria-label="Next photo">&#8250;</button>
+      <p class="lightbox__counter"></p>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
