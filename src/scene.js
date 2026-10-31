@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { createPlanet, createGalaxy } from './space.js';
 
 const HERO_Z = 6;
 const FIRST_FRAME_Z = -9;
@@ -8,9 +9,14 @@ const FRAME_SPACING = 11;
 const smoother = (t) => t * t * t * (t * (t * 6 - 15) + 10);
 const clamp01 = (v) => Math.min(1, Math.max(0, v));
 
+// Spiral galaxy at the end of the journey, seen face-on from the final camera spot
+const GALAXY_CENTER = new THREE.Vector3(0, -4, -108);
+const GALAXY_TILT = 1.1;
+
 /**
- * Starry night scene: twinkling stars, golden rings (hero) and a corridor of
- * floating photo frames (love story). Driven by `scroll` = { hero: 0..1, story: 0..1 }.
+ * Space journey: twinkling stars, golden rings (hero), planets, a corridor of
+ * floating photo frames (love story) and a spiral galaxy at the end.
+ * Driven by `scroll` = { hero, pre, story, outro }, each 0..1.
  */
 export function createScene(canvas, { framePhotos, quality, scroll }) {
   const high = quality === 'high';
@@ -37,8 +43,9 @@ export function createScene(canvas, { framePhotos, quality, scroll }) {
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   pmrem.dispose();
 
-  const key = new THREE.DirectionalLight(0xfff0d2, 2.2);
-  key.position.set(2, 3, 5);
+  // Lit from the upper left so the planets get a dramatic day/night edge
+  const key = new THREE.DirectionalLight(0xfff0d2, 2.4);
+  key.position.set(-4, 2.5, 2.5);
   scene.add(key, new THREE.AmbientLight(0xbcd3ff, 0.25));
 
   const glowTexture = makeGlowTexture();
@@ -126,6 +133,61 @@ export function createScene(canvas, { framePhotos, quality, scroll }) {
     return frame;
   });
 
+  // ---------------- Planets & galaxy ----------------
+  const goldPlanet = createPlanet({
+    radius: 2,
+    palette: ['#2a1e12', '#5a4224', '#9a7848', '#6a4e2c', '#b89a68', '#3e2c18'],
+    bands: 7,
+    seed: 3,
+    ring: true,
+    tilt: 0.35,
+    high,
+  });
+  const emeraldPlanet = createPlanet({
+    radius: 1.5,
+    palette: ['#04201f', '#0c4a43', '#1f7a68', '#0a3340', '#5fb5a0', '#0d3b4a'],
+    bands: 5,
+    seed: 11,
+    atmosphere: 0x4fe3c1,
+    tilt: -0.25,
+    high,
+  });
+  const moon = createPlanet({
+    radius: 0.9,
+    palette: ['#141d45', '#2c3f86', '#7f93d6', '#b9c5ee', '#3b4fa0'],
+    bands: 4,
+    seed: 23,
+    atmosphere: 0x9fb4ff,
+    tilt: 0.1,
+    high,
+  });
+  const planets = [goldPlanet, emeraldPlanet, moon];
+  planets.forEach((p) => scene.add(p.group));
+
+  const galaxy = createGalaxy({ count: high ? 30000 : 14000, radius: 16, pixelRatio: renderer.getPixelRatio() });
+  galaxy.group.position.copy(GALAXY_CENTER);
+  galaxy.group.rotation.x = GALAXY_TILT;
+  scene.add(galaxy.group);
+
+  const nebulae = [
+    [0x0f5a4f, 46, -14, 2, -6],
+    [0x2a4fa0, 40, 12, -3, 4],
+    [0x8a6a3a, 22, 0, 0, 0],
+  ].map(([color, size, x, y, z]) => {
+    const s = new THREE.Sprite(
+      new THREE.SpriteMaterial({ map: glowTexture, color, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }),
+    );
+    s.scale.set(size, size, 1);
+    s.position.copy(GALAXY_CENTER).add(new THREE.Vector3(x, y, z));
+    scene.add(s);
+    return s;
+  });
+
+  // Camera detours: glance at the golden planet before the story, then fly to the galaxy after it
+  const pre = { pos: new THREE.Vector3(), look: new THREE.Vector3() };
+  const outro = { pos: new THREE.Vector3(), look: GALAXY_CENTER.clone() };
+  const galaxyNormal = new THREE.Vector3(0, Math.cos(GALAXY_TILT), Math.sin(GALAXY_TILT));
+
   // ---------------- Camera stations ----------------
   // 0 = story start, 1..n = in front of each frame, n+1 = exit into open space
   const stations = Array.from({ length: frames.length + 2 }, () => ({
@@ -180,6 +242,28 @@ export function createScene(canvas, { framePhotos, quality, scroll }) {
     const exit = stations[frames.length + 1];
     exit.pos.set(0, 0, lastZ - 9);
     exit.look.set(0, 0, lastZ - 22);
+
+    // Planets sit off to the side so they never cover the photos or the text
+    // Golden planet lives in the top-right corner, clear of the rings & names
+    if (portrait) {
+      goldPlanet.group.position.set(4.3, 5.6, -14);
+      goldPlanet.group.scale.setScalar(0.75);
+      // narrow screens: just drift forward, the planet slides out towards the corner
+      pre.pos.set(0, 0.2, HERO_Z - 2.6);
+      pre.look.set(0, 0.2, 0);
+      emeraldPlanet.group.position.set(-2.6, 2.9, FIRST_FRAME_Z - 1.5 * FRAME_SPACING);
+      moon.group.position.set(1.9, -2.4, FIRST_FRAME_Z - 3.5 * FRAME_SPACING);
+    } else {
+      goldPlanet.group.position.set(10, 3.4, -14);
+      goldPlanet.group.scale.setScalar(1);
+      pre.pos.set(0.5, 0.3, HERO_Z - 2.4);
+      pre.look.set(0.9, 0.5, -9);
+      emeraldPlanet.group.position.set(-5.6, 3, FIRST_FRAME_Z - 1.5 * FRAME_SPACING - 2);
+      moon.group.position.set(4.2, -2.4, FIRST_FRAME_Z - 3.5 * FRAME_SPACING);
+    }
+    outro.pos.copy(GALAXY_CENTER).addScaledVector(galaxyNormal, portrait ? 40 : 30);
+    // look above the centre so the galaxy core sits low on screen, below the closing text
+    outro.look.copy(GALAXY_CENTER).add(new THREE.Vector3(0, portrait ? 9 : 7, 0));
   }
 
   function resize() {
@@ -189,6 +273,7 @@ export function createScene(canvas, { framePhotos, quality, scroll }) {
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     stars.material.uniforms.uPixelRatio.value = renderer.getPixelRatio();
+    galaxy.material.uniforms.uPixelRatio.value = renderer.getPixelRatio();
     layout();
   }
 
@@ -225,11 +310,25 @@ export function createScene(canvas, { framePhotos, quality, scroll }) {
 
   function computeTarget() {
     const n = frames.length;
+
+    if (scroll.outro > 0) {
+      const e = smoother(clamp01(scroll.outro));
+      const exit = stations[n + 1];
+      targetPos.lerpVectors(exit.pos, outro.pos, e);
+      targetPos.x += Math.sin(Math.PI * e) * 3;
+      targetLook.lerpVectors(exit.look, outro.look, e);
+      return;
+    }
+
     const s = clamp01(scroll.story) * (n + 1);
     if (s <= 0) {
       targetPos.copy(stations[0].pos);
       targetPos.z += 1.2 * (1 - scroll.hero);
       targetLook.copy(stations[0].look);
+      // turn towards the golden planet and back again
+      const glance = Math.sin(Math.PI * clamp01(scroll.pre));
+      targetPos.lerp(pre.pos, glance);
+      targetLook.lerp(pre.look, glance);
       return;
     }
     const k = Math.min(Math.floor(s), n);
@@ -281,6 +380,12 @@ export function createScene(canvas, { framePhotos, quality, scroll }) {
       f.group.position.y = f.baseY + Math.sin(t * 0.8 + f.index * 1.7) * 0.04;
     }
 
+    for (const p of planets) p.update(dt, camera);
+    galaxy.update(dt);
+    const near = smoother(clamp01(scroll.outro));
+    galaxy.material.uniforms.uOpacity.value = 0.3 + 0.7 * near;
+    nebulae.forEach((s, i) => (s.material.opacity = (i === 2 ? 0.22 : 0.1) * (0.25 + 0.75 * near)));
+
     stars.material.uniforms.uTime.value = t;
     stars.points.rotation.z = t * 0.004;
 
@@ -320,7 +425,7 @@ function createStars(count, pixelRatio) {
     if (Math.abs(x) < 2.4 && Math.abs(y) < 1.8) x += Math.sign(x || 1) * 2.4;
     pos[i * 3] = x;
     pos[i * 3 + 1] = y;
-    pos[i * 3 + 2] = 16 - Math.random() * 130;
+    pos[i * 3 + 2] = 16 - Math.random() * 150;
     size[i] = Math.random() < 0.07 ? 3 + Math.random() * 3 : 1 + Math.random() * 1.6;
     phase[i] = Math.random() * Math.PI * 2;
     tint[i] = Math.random() < 0.28 ? 1 : 0;

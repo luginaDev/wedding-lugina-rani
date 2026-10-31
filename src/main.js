@@ -21,7 +21,7 @@ let mode = pick3DMode();
 root.classList.add(mode === 'off' ? 'no3d' : 'has3d');
 if (!reducedMotion) root.classList.add('motion');
 
-const scroll = { hero: 0, story: 0 };
+const scroll = { hero: 0, pre: 0, story: 0, outro: 0 };
 let scene = null;
 
 // ===================================================================
@@ -244,7 +244,7 @@ const queueRefresh = () => {
   refreshQueued = setTimeout(() => ScrollTrigger.refresh(), 250);
 };
 
-initGallery(photos, { onLayoutChange: queueRefresh });
+initGallery(config.gallery?.length ? config.gallery.map(photo) : photos, { onLayoutChange: queueRefresh });
 initRsvp({ endpoint: config.rsvp.endpoint, guestName, maxGuests: config.rsvp.maxGuests, onLayoutChange: queueRefresh });
 
 // ===================================================================
@@ -325,6 +325,24 @@ ScrollTrigger.create({
   start: 'top top',
   end: 'bottom top',
   onUpdate: (self) => (scroll.hero = self.progress),
+});
+
+// Countdown + couple: the camera glances at the golden planet
+ScrollTrigger.create({
+  trigger: '#countdown',
+  start: 'top bottom',
+  endTrigger: '#story-track',
+  end: 'top top',
+  onUpdate: (self) => (scroll.pre = self.progress),
+});
+
+// Everything after the story: fly towards the galaxy
+ScrollTrigger.create({
+  trigger: '#events',
+  start: 'top bottom',
+  endTrigger: 'body',
+  end: 'bottom bottom',
+  onUpdate: (self) => (scroll.outro = self.progress),
 });
 
 ScrollTrigger.create({

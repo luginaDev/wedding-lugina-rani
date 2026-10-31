@@ -9,7 +9,7 @@ export const config = {
   groom: {
     nickname: 'Lugina',
     fullName: 'Muhamad Lugina Nurhuda',
-    parents: 'The son of Mr. Asep Saepudin & Mrs. Euis Komariah', // DEMO
+    parents: 'The son of Mr. Nurwahyudin & Mrs. Tini Suhartini',
     instagram: '', // optional, e.g. 'lugina.nh' (without @)
     photo: 11, // portrait in the couple section
   },
@@ -17,7 +17,7 @@ export const config = {
   bride: {
     nickname: 'Rani',
     fullName: 'Rani Rantika',
-    parents: 'The daughter of Mr. Dedi Kurniawan & Mrs. Neneng Sri Rahayu', // DEMO
+    parents: 'The daughter of Mr. Casmin & Mrs. Cuheti',
     instagram: '',
     photo: 10,
   },
@@ -96,6 +96,9 @@ export const config = {
       photo: 9,
     },
   ],
+
+  // Photo numbers shown in the gallery (in this order)
+  gallery: [4, 6, 1, 7, 9, 2],
 
   gifts: [
     {
